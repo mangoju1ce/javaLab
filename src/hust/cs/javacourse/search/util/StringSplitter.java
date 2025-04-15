@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import hust.cs.javacourse.search.util.Config;
+
 
 /**
  * 字符串分割类，根据标点符号和空白符将字符串分成一个个单词
