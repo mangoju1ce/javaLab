@@ -1,5 +1,11 @@
 package hust.cs.javacourse.search.index.impl;
 
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import hust.cs.javacourse.search.index.AbstractTerm;
 
 public class Term extends AbstractTerm{
@@ -9,6 +15,10 @@ public class Term extends AbstractTerm{
      */
     public Term(){
 
+    }
+
+    public Term(String word){
+        this.content = word;
     }
     /**
      * 判断二个Term内容是否相同
@@ -51,5 +61,52 @@ public class Term extends AbstractTerm{
     public int compareTo(AbstractTerm o){
         Term other = (Term)o;
         return this.content.compareTo(other.content);
+    }
+
+    /**
+     * 从流输出term
+     * @param out:输出流
+     */
+    public void writeObject(ObjectOutputStream out){
+        try{
+            out.writeObject(this.content);
+        }catch(IOException e){
+            System.out.println("IO error occured.failed to write term" + e.getMessage());
+
+        }
+    }
+    /**
+     * 从流读入term
+     * @param in：输入流
+     */
+    public void readObject(ObjectInputStream in)
+    {
+        try{
+            this.content = (String)in.readObject();
+        }catch(IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+
+    }
+    public static void main(String args[]){
+        Term a = new Term("a"), b = new Term("b"), c;
+        System.out.println(a.toString());
+        if(!a.equals(b)){
+            System.out.println("a is not equal to b");
+        }
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("term.ser"))) {
+            oos.writeObject(b);
+            System.out.println("对象已保存");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try (ObjectInputStream oos = new ObjectInputStream(new FileInputStream("term.ser"))) {
+            c = (Term)oos.readObject();
+            System.out.println("对象已读取");
+            System.out.println(c.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
